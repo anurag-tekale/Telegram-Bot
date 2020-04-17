@@ -8,10 +8,12 @@ from flask import Flask
 py=Flask(__name__)
 
 
-# Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
-
+def gettoken():
+  tokenfile = open('TOKENS.txt','r')
+  txt = tokenfile.read()
+  token = txt.split('\n')
+  return token[0]
+  
 def start(bot, update):
     """Send a message when the command /start is issued."""
     update.message.reply_text("I'm a bot, Nice to meet you!"
@@ -87,10 +89,9 @@ def getmeme(bot, update):
     bot.send_photo(chat_id=chat_id, photo=url)
 
 def main():
-
-    """Start the bot."""
-    updater = Updater('1132161922:AAFqWkWStkENcNd8cL6TNe3EgrP2lOjo7Hw')
-
+  logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+  
+    updater = Updater(token = gettoken(), use_context=True)
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler("start", start))
@@ -108,8 +109,4 @@ def main():
     updater.idle()
 
 if __name__ =="__main__":
-    app.run(debug=True)
-
-
-if __name__ == '__main__':
-    main()
+    py.run(debug=True)
